@@ -5,7 +5,7 @@
 
 /** Search Shows
  *    - given a search term, search for tv shows that
- *      match that query.  The function is async show it
+ *      match that query.  The function is async so it
  *       will be returning a promise.
  *
  *   - Returns an array of objects. Each object should include
@@ -30,7 +30,6 @@ async function searchShows(q) {
         console.log(result.show);
 
         let show = result.show;
-        console.log(result.show);
         return {
             id: show.id,
             name: show.name,
@@ -92,6 +91,19 @@ $("#search-form").on("submit", async function handleSearch(evt) {
  */
 
 async function getEpisodes(id) {
+    const res = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`);
+
+    let episodes = res.data.map(function (episode) {
+        return {
+            id: episode.id,
+            name: episode.name,
+            season: episode.season,
+            number: episode.number
+        }
+    });
+    console.log(episodes);
+    return episodes;
+
     // TODO: get episodes from tvmaze
     //       you can get this by making GET request to
     //       http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
