@@ -22,9 +22,8 @@
 // hard coded data.
 async function searchShows(q) {
     const res = await axios.get(`http://api.tvmaze.com/search/shows?q=${q}`);
-
+    const missingImgURL = "http://tinyurl.com/missing-tv";
     const shows = res.data.map(function (result) {
-        const missingImgURL = "http://tinyurl.com/missing-tv";
         let show = result.show;
         return {
             id: show.id,
@@ -54,11 +53,11 @@ function populateShows(shows) {
            <div class="card-body">
              <h5 class="card-title">${show.name}</h5>
              <p class="card-text">${show.summary}</p>
+             <button class="btn btn-outline-secondary episode-btn">Episodes</button>
            </div>
          </div>
        </div>
       `);
-
         $showsList.append($item);
     }
 }
@@ -107,3 +106,23 @@ async function getEpisodes(id) {
     return episodes;
 }
 
+
+
+function populateEpisodes(episodesArray) {
+    const $episodesArea = $("#episodes-area");
+
+    for (let episode of episodesArray) {
+        let $listItem = $(`<li id=${episode.id}>${episode.name} (Season ${episode.season}, Episode ${episode.number})</li>`);
+
+        $episodesArea.append($listItem);
+    }
+    $("#episodes-area").show();
+}
+
+
+$("#shows-list").on("click", ".episode-btn", async function handleEpisodeClick(e) {
+    let showID = $(e.target).closest(".Show").data("show-id");
+    let episodesArray = await getEpisodes(showID);
+    
+    populateEpisodes(episodesArray);
+})
