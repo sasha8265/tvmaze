@@ -22,13 +22,9 @@
 // hard coded data.
 async function searchShows(q) {
     const res = await axios.get(`http://api.tvmaze.com/search/shows?q=${q}`);
-    // const res = await axios.get('http://api.tvmaze.com/search/shows?q=girls');
-
 
     const shows = res.data.map(function (result) {
         const missingImgURL = "http://tinyurl.com/missing-tv";
-        console.log(result.show);
-
         let show = result.show;
         return {
             id: show.id,
@@ -54,6 +50,7 @@ function populateShows(shows) {
         let $item = $(
             `<div class="col-md-6 col-lg-3 Show" data-show-id="${show.id}">
          <div class="card" data-show-id="${show.id}">
+           <img class="card-img-top" src="${show.image}"></img>
            <div class="card-body">
              <h5 class="card-title">${show.name}</h5>
              <p class="card-text">${show.summary}</p>
@@ -89,6 +86,11 @@ $("#search-form").on("submit", async function handleSearch(evt) {
 /** Given a show ID, return list of episodes:
  *      { id, name, season, number }
  */
+// TODO: get episodes from tvmaze
+    //       you can get this by making GET request to
+    //       http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
+
+// TODO: return array-of-episode-info, as described in docstring above
 
 async function getEpisodes(id) {
     const res = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`);
@@ -103,10 +105,5 @@ async function getEpisodes(id) {
     });
     console.log(episodes);
     return episodes;
-
-    // TODO: get episodes from tvmaze
-    //       you can get this by making GET request to
-    //       http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
-
-    // TODO: return array-of-episode-info, as described in docstring above
 }
+
